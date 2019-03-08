@@ -19,7 +19,7 @@ def groups_data():
         print(meet.group.groupLon, file=sys.stdout)
 
     total = meets.count()
-    return 'En total hay' + str(total) + 'meetings'
+    return 'En total hay ' + str(total) + ' meetings'
 
 
 @group_blueprint.route('/')
