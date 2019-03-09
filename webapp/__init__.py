@@ -6,6 +6,7 @@ from flask_mongoengine import MongoEngine
 
 mongo = MongoEngine()
 
+
 # flask application factory method
 def create_app(object_name):
     app = Flask(__name__)
