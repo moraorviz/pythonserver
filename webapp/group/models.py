@@ -7,7 +7,7 @@ class Group(mongo.EmbeddedDocument):
     groupLat = mongo.FloatField(required=True, db_field="groupLat")
 
     def __repr__(self):
-        return "<Group '{}'>".format(self.id)
+        return {'id': self.id, 'groupLon': self.groupLon, 'groupLat': self.groupLat}
 
 
 class Meet(mongo.Document):

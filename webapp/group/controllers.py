@@ -17,8 +17,8 @@ group_blueprint = Blueprint(
 def offset(origin, groups):
 
     for i in range(len(groups)):
-        groups[i][1] -= origin[1]
-        groups[i][2] -= origin[2]
+        groups[i][1] -= origin[0][1]
+        groups[i][2] -= origin[0][2]
 
     return groups
 
@@ -26,29 +26,31 @@ def offset(origin, groups):
 # TODO implement shortest distance algorithm
 def calculate_closest(origin, groups, num):
 
-    groups = offset(groups, origin)
+    groups = offset(origin, groups)
     groups.sort(key=lambda d: d[1]**2 + d[2]**2)
 
-    return groups[:num]
+    return groups[:num].__repr__()
 
 
-@group_blueprint.route('near_test', methods=['GET'])
+@group_blueprint.route('/near_test', methods=['GET'])
 def test_parameters():
 
+    lon = request.args.get("lon")
     lat = request.args.get("lat")
-    return '''<h1>The lat value is: {}</h1>'''.format(lat)
+    return '''<h1>The lon value is: {}</h1>'''.format(lon) + '''<h1>The lat value is: {}</h1>'''.format(lat)
 
 
 @group_blueprint.route('/near', methods=['GET'])
 def get_closest():
 
-    origin = [0, request.args.get('lat'), request.args.get('lon')]
-    num = 10;
+    origin = [[0, float(request.args.get('lon')), float(request.args.get('lat'))]]
+    num = 20000;
     groups = list()
     meets = Meet.objects
     for meet in meets:
 
-        groups.append(meet.group)
+        group = [meet.group.id, float(meet.group.groupLon), float(meet.group.groupLat)]
+        groups.append(group)
 
     return calculate_closest(origin, groups, num)
 
