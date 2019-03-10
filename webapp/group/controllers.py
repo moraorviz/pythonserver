@@ -49,7 +49,7 @@ def get_closest():
     meets = Meet.objects
     for meet in meets:
 
-        group = [meet.group.id, float(meet.group.groupLon), float(meet.group.groupLat)]
+        group = [meet.group.groupId, float(meet.group.groupLon), float(meet.group.groupLat)]
         groups.append(group)
 
     return calculate_closest(origin, groups, num)
