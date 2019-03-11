@@ -16,6 +16,7 @@ class Meet(mongo.Document):
     objectId = mongo.IntField(requred=True, db_field="_id")
     id = mongo.IntField(required=True, db_field="rsvpId")
     mTime = mongo.IntField(required=True, db_field="mTime")
+    response = mongo.StringField(required=True, db_field="response")
     guests = mongo.IntField(required=True, db_field="guests")
     group = mongo.EmbeddedDocumentField(Group, db_field="group")
     _class=mongo.StringField(required=True)
