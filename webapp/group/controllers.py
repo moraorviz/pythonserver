@@ -1,5 +1,5 @@
 from .models import Meet
-import sys, datetime, requests
+import sys, datetime, requests, operator
 
 from flask import Blueprint, request
 
@@ -55,22 +55,29 @@ def get_closest():
 def get_top_cities():
 
     date_iso = request.args.get('date')
-    date_add_hour = str(date_iso) + '000001'
+    date_add_hour = date_iso + "000001"
     date = datetime.datetime.strptime(date_add_hour, "%Y%m%d%H%M%S")
     epoch = date.utcfromtimestamp(0)
     date_ms = unix_time_millis(date, epoch)
+    print(date_ms)
     r = requests.get("http://127.0.0.1:8080/meet/" + str(date_ms))
 
-    cities = {}
+    cities = dict()
     meets = Meet.objects
-
+    time_threshold = date_ms + 86400000
     for meet in meets:
+            if (meet.mTime > date_ms) and (date_ms < time_threshold):
+                print(meet.mTime)
+                if meet.response == "yes":
+                    if meet.group.groupCity in cities:
+                        print(meet.group.groupCity)
+                        cities[meet.group.groupCity] += 1 + int(meet.guests)
+                    else:
+                        print(meet.group.groupCity)
+                        cities[meet.group.groupCity] = 1 + int(meet.guests)
 
-            if (meet.mTime > date_ms) and (meet.mTime < date_ms + 86400000):
-                if meet.group.groupCity in cities:
-                    cities[meet.group.groupCity] =
-
-    return ''
+    sorted_cities = sorted(cities.items(), key=operator.itemgetter(1))
+    return sorted_cities[:20].__repr__()
 
 
 def groups_data():
